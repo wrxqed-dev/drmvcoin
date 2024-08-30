@@ -1,17 +1,19 @@
+/* Общие стили */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
-    color: white;
+    background: linear-gradient(135deg, #f6d365, #fda085);
+    color: #fff;
     overflow: hidden;
 }
 
 .menu {
     text-align: center;
+    animation: fadeIn 1s ease-out;
 }
 
 .hidden {
@@ -20,39 +22,56 @@ body {
 
 #profile {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 #profile-avatar {
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    animation: zoomIn 0.5s ease-out;
 }
 
 #total-coins {
-    font-size: 48px;
-    margin: 20px 0;
+    font-size: 72px;
+    font-weight: bold;
+    margin: 30px 0;
+    animation: slideInDown 0.5s ease-out;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 10px;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px;
     background-color: #2ecc71;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    animation: slideInUp 0.5s ease-out;
 }
 
 button:hover {
     background-color: #27ae60;
+    transform: translateY(-3px);
+}
+
+button:active {
+    transform: translateY(2px);
 }
 
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 #game-area {
@@ -63,8 +82,8 @@ button:hover {
 }
 
 .coin {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background-image: url('coin.png');
     background-size: cover;
     position: absolute;
@@ -83,9 +102,33 @@ button:hover {
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 32px;
+    font-size: 36px;
+    animation: slideInRight 0.5s ease-out;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#results {
-    text-align: center;
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideInDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
 }
