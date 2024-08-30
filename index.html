@@ -4,38 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dremov Coin</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="main-menu" class="menu">
-        <h1>Dremov Coin</h1>
+    <div class="menu">
         <div id="profile">
-            <img id="profile-avatar" src="default-avatar.png" alt="Avatar">
-            <p id="profile-name">Ваш Ник</p>
+            <img id="profile-avatar" src="default-avatar.png" alt="Profile Avatar">
         </div>
-        <h2 id="total-coins">0</h2>
-        <button id="start-game">Play</button>
-        <button id="profile-btn">Profile</button>
-        <button id="leaderboard-btn">Leaderboard</button>
+        <div id="total-coins">DRMVCOIN: 0</div>
+        <button id="play-button">Play</button>
+        <button id="leaderboard-button">Leaderboard</button>
+        <button id="profile-button">Profile</button>
     </div>
 
     <div id="game-container" class="hidden">
         <div id="game-area"></div>
-        <div id="score-board">
-            <h2 id="score">0</h2>
-        </div>
+        <div id="score-board">Score: 0</div>
     </div>
 
-    <div id="results" class="hidden">
-        <h2>Game Over</h2>
-        <p id="final-score">0</p>
-        <button id="restart-game">Back to Menu</button>
-    </div>
-
-    <div id="leaderboard" class="hidden">
-        <h2>Leaderboard</h2>
-        <ul id="leaderboard-list"></ul>
-        <button id="back-to-menu">Back to Menu</button>
+    <div id="game-over-screen" class="hidden">
+        <h1>Game Over!</h1>
+        <button id="return-button">Return to Menu</button>
     </div>
 
     <script src="script.js"></script>
