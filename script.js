@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalCoins = parseInt(localStorage.getItem('totalCoins')) || 0;
     let username = "Ваш Ник";
     let avatar = "default-avatar.png";
+    let coinInterval;
 
     const scoreDisplay = document.getElementById('score');
     const finalScoreDisplay = document.getElementById('final-score');
@@ -66,11 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
         scoreDisplay.textContent = score;
         mainMenu.classList.add('hidden');
         gameContainer.classList.remove('hidden');
-        createCoin();
+
+        // Генерация монет с интервалом в 1 секунду
+        coinInterval = setInterval(createCoin, 1000);
     }
 
     function endGame() {
         gameActive = false;
+        clearInterval(coinInterval); // Остановка генерации монет
         document.querySelectorAll('.coin').forEach(coin => coin.remove());
         finalScoreDisplay.textContent = score;
         totalCoins += score;
