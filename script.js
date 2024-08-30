@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let username = "Ваш Ник";
     let avatar = "default-avatar.png";
     let coinInterval;
+    let activeCoins = 0;
 
     const scoreDisplay = document.getElementById('score');
     const finalScoreDisplay = document.getElementById('final-score');
@@ -42,11 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
         coin.style.left = `${Math.random() * (gameArea.clientWidth - 50)}px`;
         coin.style.animationDuration = `${coinSpeed}s`;
 
+        activeCoins++; // Увеличиваем счетчик активных монет
+
         coin.addEventListener('click', () => {
             if (gameActive) {
                 score++;
                 scoreDisplay.textContent = score;
                 coin.remove();
+                activeCoins--; // Уменьшаем счетчик активных монет
                 coinSpeed = Math.max(coinSpeed - 0.1, 0.5);  // Ускорение монет
                 createCoin(); // Создаем новую монету при клике
             }
@@ -77,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         gameActive = false;
         clearInterval(coinInterval); // Остановка генерации монет
         document.querySelectorAll('.coin').forEach(coin => coin.remove());
+        activeCoins = 0;
         finalScoreDisplay.textContent = score;
         totalCoins += score;
         localStorage.setItem('totalCoins', totalCoins);
