@@ -1,85 +1,57 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #f6d365, #fda085);
-    color: #fff;
+    background-color: #333;
+    color: white;
     overflow: hidden;
 }
 
-/* Стили меню */
 .menu {
-    text-align: center;
-    animation: fadeIn 1s ease-out;
-    width: 100%;
-    height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-}
-
-.hidden {
-    display: none;
+    text-align: center;
 }
 
 #profile {
     margin-bottom: 20px;
-    text-align: center;
 }
 
 #profile-avatar {
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    animation: zoomIn 0.5s ease-out;
+    width: 80px;
+    height: 80px;
 }
 
 #total-coins {
-    font-size: 72px;
-    font-weight: bold;
-    margin: 30px 0;
-    animation: slideInDown 0.5s ease-out;
-    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
 button {
-    padding: 15px 30px;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 15px;
-    background-color: #2ecc71;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: #444;
     border: none;
-    border-radius: 50px;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    animation: slideInUp 0.5s ease-out;
 }
 
 button:hover {
-    background-color: #27ae60;
-    transform: translateY(-3px);
+    background-color: #555;
 }
 
-button:active {
-    transform: translateY(2px);
-}
-
-/* Стили для контейнера игры */
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: #222;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,57 +61,21 @@ button:active {
     width: 100%;
     height: 100%;
     position: relative;
-    overflow: hidden;
 }
 
 .coin {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background-image: url('coin.png');
     background-size: cover;
     position: absolute;
     top: 0;
     cursor: pointer;
-    animation: fall linear forwards;
-}
-
-@keyframes fall {
-    to {
-        top: 100%;
-    }
 }
 
 #score-board {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 36px;
-    animation: slideInRight 0.5s ease-out;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Анимации */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideInUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-}
-
-@keyframes slideInDown {
-    from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-}
-
-@keyframes slideInRight {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-}
-
-@keyframes zoomIn {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
 }
