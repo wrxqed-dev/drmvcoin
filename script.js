@@ -1,79 +1,120 @@
-let score = 0;
-let totalCoins = 0;
-let gameInterval;
-let gameInProgress = false;
+document.addEventListener("DOMContentLoaded", () => {
+    let score = 0;
+    let gameActive = false;
+    let coinSpeed = 4;
+    let totalCoins = parseInt(localStorage.getItem('totalCoins')) || 0;
+    let username = "Ваш Ник";
+    let avatar = "default-avatar.png";
 
-const playButton = document.getElementById('play-button');
-const leaderboardButton = document.getElementById('leaderboard-button');
-const profileButton = document.getElementById('profile-button');
-const returnButton = document.getElementById('return-button');
-const gameContainer = document.getElementById('game-container');
-const gameArea = document.getElementById('game-area');
-const scoreBoard = document.getElementById('score-board');
-const totalCoinsElement = document.getElementById('total-coins');
-const menu = document.querySelector('.menu');
-const gameOverScreen = document.getElementById('game-over-screen');
+    const scoreDisplay = document.getElementById('score');
+    const finalScoreDisplay = document.getElementById('final-score');
+    const totalCoinsDisplay = document.getElementById('total-coins');
+    const profileNameDisplay = document.getElementById('profile-name');
+    const profileAvatarDisplay = document.getElementById('profile-avatar');
+    const gameArea = document.getElementById('game-area');
+    const startButton = document.getElementById('start-game');
+    const restartGameButton = document.getElementById('restart-game');
+    const mainMenu = document.getElementById('main-menu');
+    const gameContainer = document.getElementById('game-container');
+    const leaderboard = document.getElementById('leaderboard');
+    const leaderboardList = document.getElementById('leaderboard-list');
+    const profileBtn = document.getElementById('profile-btn');
+    const leaderboardBtn = document.getElementById('leaderboard-btn');
+    const backToMenuBtn = document.getElementById('back-to-menu');
 
-function startGame() {
-    menu.classList.add('hidden');
-    gameOverScreen.classList.add('hidden');
-    gameContainer.classList.remove('hidden');
-    score = 0;
-    gameInProgress = true;
-    gameInterval = setInterval(spawnCoin, 1000);
-}
+    totalCoinsDisplay.textContent = totalCoins;
 
-function endGame() {
-    clearInterval(gameInterval);
-    gameInProgress = false;
-    gameContainer.classList.add('hidden');
-    gameOverScreen.classList.remove('hidden');
-    totalCoins += score;
-    updateTotalCoins();
-    updateLeaderboard();
-}
+    // Telegram Web App Integration
+    if (window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        username = tg.initDataUnsafe.user.username || "Ваш Ник";
+        avatar = tg.initDataUnsafe.user.photo_url || "default-avatar.png";
+    }
 
-function spawnCoin() {
-    if (!gameInProgress) return;
-    const coin = document.createElement('div');
-    coin.classList.add('coin');
-    coin.style.left = `${Math.random() * 90}vw`;
-    coin.style.animationDuration = `${2 - score * 0.05}s`;
-    gameArea.appendChild(coin);
-    
-    coin.addEventListener('click', () => {
-        score++;
-        scoreBoard.textContent = `Score: ${score}`;
-        coin.remove();
+    profileNameDisplay.textContent = username;
+    profileAvatarDisplay.src = avatar;
+
+    function createCoin() {
+        const coin = document.createElement('div');
+        coin.classList.add('coin');
+        coin.style.left = `${Math.random() * (gameArea.clientWidth - 50)}px`;
+        coin.style.animationDuration = `${coinSpeed}s`;
+
+        coin.addEventListener('click', () => {
+            if (gameActive) {
+                score++;
+                scoreDisplay.textContent = score;
+                coin.remove();
+                coinSpeed = Math.max(coinSpeed - 0.1, 1);
+            }
+        });
+
+        coin.addEventListener('animationend', () => {
+            if (gameActive) {
+                endGame();
+            }
+        });
+
+        gameArea.appendChild(coin);
+    }
+
+    function startGame() {
+        score = 0;
+        coinSpeed = 4;
+        gameActive = true;
+        scoreDisplay.textContent = score;
+        mainMenu.classList.add('hidden');
+        gameContainer.classList.remove('hidden');
+        createCoin();
+    }
+
+    function endGame() {
+        gameActive = false;
+        document.querySelectorAll('.coin').forEach(coin => coin.remove());
+        finalScoreDisplay.textContent = score;
+        totalCoins += score;
+        localStorage.setItem('totalCoins', totalCoins);
+        totalCoinsDisplay.textContent = totalCoins;
+        saveLeaderboard();
+        gameContainer.classList.add('hidden');
+        document.getElementById('results').classList.remove('hidden');
+    }
+
+    function showLeaderboard() {
+        leaderboardList.innerHTML = '';
+        const leaders = JSON.parse(localStorage.getItem('leaders')) || [];
+        leaders.forEach((leader, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}. ${leader.username}: ${leader.score} DRMVCOIN`;
+            leaderboardList.appendChild(li);
+        });
+        leaderboard.classList.remove('hidden');
+        mainMenu.classList.add('hidden');
+    }
+
+    function saveLeaderboard() {
+        const leaders = JSON.parse(localStorage.getItem('leaders')) || [];
+        leaders.push({ username, score });
+        leaders.sort((a, b) => b.score - a.score);
+        localStorage.setItem('leaders', JSON.stringify(leaders));
+    }
+
+    startButton.addEventListener('click', startGame);
+    restartGameButton.addEventListener('click', () => {
+        document.getElementById('results').classList.add('hidden');
+        startGame();
+    });
+    leaderboardBtn.addEventListener('click', showLeaderboard);
+    backToMenuBtn.addEventListener('click', () => {
+        leaderboard.classList.add('hidden');
+        mainMenu.classList.remove('hidden');
+    });
+    profileBtn.addEventListener('click', () => {
+        alert('Профиль пользователя: ' + username);
     });
 
-    setTimeout(() => {
-        if (coin.parentElement) {
-            coin.remove();
-            endGame();
-        }
-    }, 2000);
-}
-
-function updateTotalCoins() {
-    totalCoinsElement.textContent = `DRMVCOIN: ${totalCoins}`;
-}
-
-function updateLeaderboard() {
-    // Simple example for updating leaderboard
-    // Add your leaderboard update logic here
-}
-
-playButton.addEventListener('click', startGame);
-returnButton.addEventListener('click', () => {
-    menu.classList.remove('hidden');
-    gameOverScreen.classList.add('hidden');
-});
-
-leaderboardButton.addEventListener('click', () => {
-    // Logic for showing the leaderboard
-});
-
-profileButton.addEventListener('click', () => {
-    // Logic for showing the profile
+    // Инициализация главного меню при загрузке страницы
+    mainMenu.classList.remove('hidden');
+    totalCoinsDisplay.textContent = totalCoins;
 });
