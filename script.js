@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let score = 0;
     let gameActive = false;
     let coinSpeed = 4;
+    let coinIntervalTime = 2000; // Интервал между появлением монет (в миллисекундах)
     let totalCoins = parseInt(localStorage.getItem('totalCoins')) || 0;
     let username = "Ваш Ник";
     let avatar = "default-avatar.png";
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scoreDisplay.textContent = score;
                 coin.remove();
                 coinSpeed = Math.max(coinSpeed - 0.1, 0.5);  // Ускорение монет
-                createCoin(); // Создаем новую монету при клике
+                coinIntervalTime = Math.max(coinIntervalTime - 100, 500); // Уменьшение времени интервала
             }
         });
 
@@ -61,19 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
         gameArea.appendChild(coin);
     }
 
+    function startCoinSpawning() {
+        createCoin();
+        coinInterval = setInterval(() => {
+            createCoin();
+        }, coinIntervalTime);
+    }
+
     function startGame() {
         score = 0;
         coinSpeed = 4;
+        coinIntervalTime = 2000; // Сброс интервала времени
         gameActive = true;
         scoreDisplay.textContent = score;
         mainMenu.classList.add('hidden');
         gameContainer.classList.remove('hidden');
 
-        createCoin(); // Запуск падения монет
+        startCoinSpawning(); // Запуск спавна монет
     }
 
     function endGame() {
         gameActive = false;
+        clearInterval(coinInterval); // Остановка спавна монет
         document.querySelectorAll('.coin').forEach(coin => coin.remove());
         finalScoreDisplay.textContent = score;
         totalCoins += score;
@@ -87,20 +97,32 @@ document.addEventListener("DOMContentLoaded", () => {
     function showLeaderboard() {
         leaderboardList.innerHTML = '';
         const leaders = JSON.parse(localStorage.getItem('leaders')) || [];
-        leaders.forEach((leader, index) => {
+        const uniqueLeaders = leaders.reduce((acc, leader) => {
+            if (!acc.some(l => l.username === leader.username)) {
+                acc.push(leader);
+            }
+            return acc;
+        }, []);
+        
+        uniqueLeaders.sort((a, b) => b.score - a.score);
+
+        uniqueLeaders.forEach((leader, index) => {
             const li = document.createElement('li');
             li.textContent = `${index + 1}. ${leader.username}: ${leader.score} DRMVCOIN`;
             leaderboardList.appendChild(li);
         });
+
         leaderboard.classList.remove('hidden');
         mainMenu.classList.add('hidden');
     }
 
     function saveLeaderboard() {
         const leaders = JSON.parse(localStorage.getItem('leaders')) || [];
-        leaders.push({ username, score });
-        leaders.sort((a, b) => b.score - a.score);
-        localStorage.setItem('leaders', JSON.stringify(leaders));
+        const newEntry = { username, score };
+        const updatedLeaders = leaders.filter(leader => leader.username !== username);
+        updatedLeaders.push(newEntry);
+        updatedLeaders.sort((a, b) => b.score - a.score);
+        localStorage.setItem('leaders', JSON.stringify(updatedLeaders));
     }
 
     startButton.addEventListener('click', startGame);
@@ -117,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alert('Профиль пользователя: ' + username);
     });
 
-    // Инициализация главного меню при загрузке страницы
     mainMenu.classList.remove('hidden');
     totalCoinsDisplay.textContent = totalCoins;
 });
