@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 score++;
                 scoreDisplay.textContent = score;
                 coin.remove();
-                coinSpeed = Math.max(coinSpeed - 0.1, 1);
+                coinSpeed = Math.max(coinSpeed - 0.1, 0.5);  // Ускорение монет
+                createCoin(); // Создаем новую монету при клике
             }
         });
 
@@ -68,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
         mainMenu.classList.add('hidden');
         gameContainer.classList.remove('hidden');
 
-        // Генерация монет с интервалом в 1 секунду
-        coinInterval = setInterval(createCoin, 1000);
+        // Генерация множественных монет с интервалом в 0.5 секунды
+        coinInterval = setInterval(createCoin, 500);
     }
 
     function endGame() {
@@ -107,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startButton.addEventListener('click', startGame);
     restartGameButton.addEventListener('click', () => {
         document.getElementById('results').classList.add('hidden');
-        startGame();
+        mainMenu.classList.remove('hidden');
     });
     leaderboardBtn.addEventListener('click', showLeaderboard);
     backToMenuBtn.addEventListener('click', () => {
